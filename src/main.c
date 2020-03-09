@@ -15,12 +15,13 @@
 #include <errno.h>
 #include <string.h>
 
-static int print_error(char const *str)
+static int print_error(char *str)
 {
-    perror(str);
+    write(2, str, strlen(str));
     return 84;
 }
 
+/*
 int do_trace(pid_t child)
 {
     long test = 0;
@@ -32,29 +33,50 @@ int do_trace(pid_t child)
     return 0;
 }
 
+if (child == 0) {
+        return do_child(av[1]);
+    } else {
+        return do_trace(child);
+    }
+    exit(0);
+
 int do_child(char *cmd, char **envp)
 {
     char *str = strcat("bin/", cmd);
     ptrace(PTRACE_TRACEME);
     execve(str, cmd,envp);
     return 0;
+}*/
+
+static int procress_running(pid_t child)
+{
+    return 0;
+}
+
+static int load_child(int ac, char **av, size_t option)
+{
+    return 0;
 }
 
 int main(int ac, char **av)
 {
-    pid_t child = fork();
-    int count = 0;
+    pid_t child;
+    size_t option = 0;
 
-    if (av < 2)
+    if (ac < 2)
         return print_error("Usage: ./strace [-s] [-p <pid>|<commande>]\n");
     if (strcmp(av[1], "-s") == 0)
-        count++;
-    //if (av[1 + count] && strcmp(av[1 + cout], "-p") == 0 && av[2 + count])
-     //   
-    /*if (child == 0) {
-        return do_child(av[1]);
+        option++;
+    if (av[1 + option] && !strcmp(av[1 + option], "-p") && av[2 + option]) {
+        child = atoi(av[2 + option]);
+        if (procress_running(child) == 84)
+            return 84;
     } else {
-        return do_trace(child);
+        if (!av[1 + option])
+            return print_error("Error: invalide option\n");
+        child = fork();
+        if (child == 0)
+            return (load_child(ac, av, option));
     }
-    exit(0);*/
     return 0;
+}
