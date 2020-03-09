@@ -5,12 +5,13 @@
 ## make strace
 ##
 
-D_SRC	=	./src/
-D_INC	=	./include/
+D_SRC		=	./src/
+D_INC		=	./include/
+D_TEST		=	./criterion/
 
-NAME	=	strace
+NAME		=	strace
 
-SRC		=	$(D_SRC)main.c
+SRC			=	$(D_SRC)main.c
 
 OBJ		=	$(SRC:.c=.o)
 
@@ -26,7 +27,11 @@ clean	:
 
 fclean	:	clean
 			rm -f $(NAME)
+			make fclean -C $(D_TEST)
 
 re		:	fclean all
+
+tests_run	:
+				make re -C $(D_TEST)
 
 .PHONY	:	all clean fclean re
