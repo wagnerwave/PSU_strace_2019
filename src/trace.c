@@ -62,18 +62,34 @@ int load_child(int ac, char **av)
     return 0;
 }
 
+static int waitchild(pid_t pid)
+{
+    int status;
+
+    waitpid(pid, &status, 0);
+    if (WIFSTOPPED(status)) {
+        return 0;
+    } else if (WIFEXITED(status)) {
+        return 1;
+    } else {
+        printf("%d raised an unexpected status %d", pid, status);
+        return 1;
+    }
+}
+
 int strace(pid_t child, size_t option)
 {
-    struct user_regs_struct register;
-    int var_check = 0;
-    int status = 0;
-    int ret_value = 0;
+    struct user_regs_struct regs;
+    //CREE LA VARIABLE DE LA STRUCTURE DE PERSON
 
-    var_check = waitpid(child, &status, 0);
-    if (var_check == -1)
-        return print_error("Error: waitpid failed.\n");
-    do {
-    
-    } while (get_signal_status(status) <)
+    while (waitchild(child) < 1) {
+        ptrace(PTRACE_GETREGS, child, NULL, &regs);
+        //if (STRUCT2PERSON = FUNCTION QUI REMPLI LA STRUCTURE(regs.orig_rax) /* sheach syscall */) {
+        //    ptrace(PTRACE_SINGLESTEP, child);
+        //     FUNCTION QUI PRINT TOUT BIEN AVEC LA STRUCTURE EN PARAMETRE
+        //}
+    }
     return 0;
 }
+
+i
