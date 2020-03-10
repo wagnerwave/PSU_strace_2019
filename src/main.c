@@ -7,6 +7,8 @@
 
 #include <sys/ptrace.h>
 #include <sys/reg.h>
+#include <sys/signal.h>
+#include <sys/user.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -14,12 +16,8 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
-
-static int print_error(char *str)
-{
-    write(2, str, strlen(str));
-    return 84;
-}
+#include "my.h"
+#include "strace.h"
 
 /*
 int do_trace(pid_t child)
@@ -32,29 +30,51 @@ int do_trace(pid_t child)
     test = ptrace(PTRACE_GETREGS, child, 0, sizeof(long)*RAX);
     return 0;
 }
+*/
 
-if (child == 0) {
-        return do_child(av[1]);
-    } else {
-        return do_trace(child);
-    }
-    exit(0);
-
-int do_child(char *cmd, char **envp)
+static int process_running(pid_t child)
 {
-    char *str = strcat("bin/", cmd);
-    ptrace(PTRACE_TRACEME);
-    execve(str, cmd,envp);
-    return 0;
-}*/
+    struct user_regs_struct register;
+    long ret_value = 0;
 
-static int procress_running(pid_t child)
+    ret_value = ptrace(PTRACE_ATTACH, child, 0, 0);
+    if (ret_value == -1)
+        return print_error("Error: attach to running processus failed.\n");
+    return (int)ret_value;
+}
+
+static int load_child(int ac, char **av)
 {
+    int var_check = 0;
+    char *args[ac + 1];
+
+    memcpy(args, av, ac * sizeof(char *));
+    args[ac] = NULL;
+    var_check = ptrace(PTRACE_TRACEME);
+    if (var_check == -1)
+        return print_error("Error: ptrace traceme failed.\n");
+    var_check = kill(getpid(), SIGSTOP);
+    if (var_check == -1)
+        return print_error("Error: kill pid with sigstop failed.\n");
+    var_check = execvp(args[0], args);
+    if (var_check == -1)
+        return print_error("Error: excution error.\n");
     return 0;
 }
 
-static int load_child(int ac, char **av, size_t option)
+static int strace(pid_t child, size_t option)
 {
+    struct user_regs_struct register;
+    int var_check = 0;
+    int status = 0;
+    int ret_value = 0;
+
+    var_check = waitpid(child, &status, 0);
+    if (var_check == -1)
+        return print_error("Error: waitpid failed.\n");
+    //while (get_signal_status(&status)) {
+
+    //}
     return 0;
 }
 
@@ -69,14 +89,14 @@ int main(int ac, char **av)
         option++;
     if (av[1 + option] && !strcmp(av[1 + option], "-p") && av[2 + option]) {
         child = atoi(av[2 + option]);
-        if (procress_running(child) == 84)
+        if (process_running(child) == 84)
             return 84;
     } else {
         if (!av[1 + option])
             return print_error("Error: invalide option\n");
         child = fork();
         if (child == 0)
-            return (load_child(ac, av, option));
+            return load_child(ac, av);
     }
-    return 0;
+    return exit_strace(strace(child, option), option);
 }

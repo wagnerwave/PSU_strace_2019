@@ -10,7 +10,8 @@ D_INC		=	./include/
 
 NAME		=	strace
 
-SRC			=	$(D_SRC)main.c
+SRC			=	$(D_SRC)print_ft.c \
+				$(D_SRC)main.c
 
 OBJ		=	$(SRC:.c=.o)
 
