@@ -11,7 +11,8 @@ D_INC		=	./include/
 NAME		=	strace
 
 SRC			=	$(D_SRC)print_ft.c \
-				$(D_SRC)main.c
+				$(D_SRC)main.c	\
+				$(D_SRC)trace.c	\
 
 OBJ		=	$(SRC:.c=.o)
 
