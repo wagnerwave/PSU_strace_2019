@@ -42,7 +42,7 @@ struct s_syscall_arg
   }	printer;
 };
 
-struct s_syscall
+typedef struct s_syscall
 {
   unsigned long long	id;
   const char		*name;
@@ -50,17 +50,7 @@ struct s_syscall
   enum e_type		retval;
   size_t		argc;
   struct s_syscall_arg	args[STRACE_SYSCALL_ARGS_MAX];
-};
-
-typedef struct my_struct
-{
-    unsigned long long	id;
-    const char *name;
-    bool noreturn;
-    enum e_type retval;
-    size_t argc;
-    //  struct s_syscall_arg args[STRACE_SYSCALL_ARGS_MAX];
-}my_struct_s;
+} s_syscall_t;
 
 extern struct s_syscall g_syscalls[];
 

@@ -123,30 +123,27 @@ void syscall_value(int id, my_struct_s temp)
 }*/
 
 // methode 1
-int syscall_value(int id)
+s_syscall_t *get_syscall_by_value(int id)
 {
     int i = 0;
-    struct retour_du_maillon;
 
-    while (g_syscalls[i].name){
-        if (g_syscalls[i].id == id) {
-            printf("le syscall egal %s\n", g_syscalls[i].name);
-            return (i);
-        }
+    while (g_syscalls[i].name) {
+        if (g_syscalls[i].id == id)
+            return (&g_syscalls[i]);
         i++;
     }
+    return NULL;
 }
 
 int strace(pid_t child, size_t option)
 {
     struct user_regs_struct regs;
-    my_struct_s temp;//CREE LA VARIABLE DE LA STRUCTURE DE PERSON
+    s_syscall_t *temp = NULL;
 
     while (waitchild(child) < 1) {
-        //ptrace(PTRACE_GETREGS, child, NULL, &regs);
-        syscall_value(1);
-    //    syscall_value(1, temp); //if (STRUCT2PERSON = FUNCTION QUI REMPLI LA STRUCTURE(regs.orig_rax) /* sheach syscall */) {
-        //printf("testuuu = %d\n", temp.id);
+        ptrace(PTRACE_GETREGS, child, NULL, &regs);
+        temp = get_syscall_by_value(regs.orig_rax);
+        printf("testuuu = %s\n", temp->name);
         //    ptrace(PTRACE_SINGLESTEP, child);
         //     FUNCTION QUI PRINT TOUT BIEN AVEC LA STRUCTURE EN PARAMETRE
         //}

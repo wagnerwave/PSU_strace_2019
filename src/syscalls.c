@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "strace.h"
 
-struct s_syscall	g_syscalls[] = {
+s_syscall_t	g_syscalls[] = {
     {
         .id = 0,
         .name = "read",

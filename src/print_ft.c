@@ -16,6 +16,7 @@ int print_error(char *str)
 
 int exit_strace(int value_status, size_t option)
 {
+    option = 0;
     if (WIFEXITED(value_status)) {
         printf("+++ exited with %d +++\n", WEXITSTATUS(value_status));
         return 0;
