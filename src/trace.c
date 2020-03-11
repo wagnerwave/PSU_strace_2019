@@ -18,6 +18,8 @@
 #include <string.h>
 #include "my.h"
 #include "strace.h"
+#include "../include/strace.h"
+#include "syscalls.c"
 
 /*
 int do_trace(pid_t child)
@@ -77,19 +79,77 @@ static int waitchild(pid_t pid)
     }
 }
 
+static int strace_syscall_get_by_id(unsigned long long id, struct s_syscall *scallp)
+{
+    size_t	i;
+
+    i = 0;
+    while (g_syscalls[i].name != NULL)
+    {
+        if (g_syscalls[i].id == id)
+        {
+            *scallp = g_syscalls[i];
+            return (0);
+        }
+        i++;
+    }
+    return (-1);
+}
+
+/*
+// methode 2
+void syscall_value(int id, my_struct_s temp)
+{
+    int i = 0;
+
+    while (g_syscalls[i].name){
+        if (g_syscalls[i].id == id) {
+            temp.id = g_syscalls[i].id;
+            temp.name = g_syscalls[i].name;
+            temp.argc = g_syscalls[i].argc;
+            temp.noreturn = g_syscalls[i].noreturn;
+            temp.retval = g_syscalls[i].retval;
+            //*temp = temp;
+            printf("id = %lld\n", temp.id);
+            //printf("%d\n", temp.retval);
+            //printf("%d\n", temp.noreturn);
+            printf("argc = %zu\n", temp.argc);
+            printf("name = %s\n", temp.name);
+            return;
+        }
+        printf("toto");
+        i++;
+    }
+}*/
+
+// methode 1
+int syscall_value(int id)
+{
+    int i = 0;
+    struct retour_du_maillon;
+
+    while (g_syscalls[i].name){
+        if (g_syscalls[i].id == id) {
+            printf("le syscall egal %s\n", g_syscalls[i].name);
+            return (i);
+        }
+        i++;
+    }
+}
+
 int strace(pid_t child, size_t option)
 {
     struct user_regs_struct regs;
-    //CREE LA VARIABLE DE LA STRUCTURE DE PERSON
+    my_struct_s temp;//CREE LA VARIABLE DE LA STRUCTURE DE PERSON
 
     while (waitchild(child) < 1) {
-        ptrace(PTRACE_GETREGS, child, NULL, &regs);
-        //if (STRUCT2PERSON = FUNCTION QUI REMPLI LA STRUCTURE(regs.orig_rax) /* sheach syscall */) {
+        //ptrace(PTRACE_GETREGS, child, NULL, &regs);
+        syscall_value(1);
+    //    syscall_value(1, temp); //if (STRUCT2PERSON = FUNCTION QUI REMPLI LA STRUCTURE(regs.orig_rax) /* sheach syscall */) {
+        //printf("testuuu = %d\n", temp.id);
         //    ptrace(PTRACE_SINGLESTEP, child);
         //     FUNCTION QUI PRINT TOUT BIEN AVEC LA STRUCTURE EN PARAMETRE
         //}
     }
     return 0;
 }
-
-i

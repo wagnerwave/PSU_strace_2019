@@ -52,5 +52,16 @@ struct s_syscall
   struct s_syscall_arg	args[STRACE_SYSCALL_ARGS_MAX];
 };
 
+typedef struct my_struct
+{
+    unsigned long long	id;
+    const char *name;
+    bool noreturn;
+    enum e_type retval;
+    size_t argc;
+    //  struct s_syscall_arg args[STRACE_SYSCALL_ARGS_MAX];
+}my_struct_s;
+
+extern struct s_syscall g_syscalls[];
 
 #endif /* !STRACE_H_ */
