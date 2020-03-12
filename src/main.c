@@ -52,15 +52,15 @@ int main(int ac, char **av)
     size_t option = 0;
     int flag;
 
-    flag = parsing(ac, av);
+   /* flag = parsing(ac, av);
     if (flag == P_FLAG || flag == S_FLAG)
         pid_arg = atoi(av[2]);
     if (flag == NO_FLAG)
         pid_arg = atoi(av[1]);
     return (process_running(pid_arg));
+    */
     child = fork();
     if (child == 0)
-        return (load_child(ac, av));
-
+        return load_child(ac, av);
     return exit_strace(strace(child, option), option);
 }

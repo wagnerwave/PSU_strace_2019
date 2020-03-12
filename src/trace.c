@@ -19,35 +19,30 @@
 #include "my.h"
 #include "strace.h"
 
-static int waitchild(pid_t pid)
+static int get_status_signal(int status)
 {
-    int status;
-
-    waitpid(pid, &status, 0);
-    if (WIFSTOPPED(status)) {
-        return 0;
-    } else if (WIFEXITED(status)) {
-        return 1;
-    } else {
-        printf("%d raised an unexpected status %d", pid, status);
-        return 1;
-    }
+    int ret = ((WSTOPSIG(status) == SIGTRAP || WSTOPSIG(status) == SIGSTOP)
+                && WIFSTOPPED(status));
+    return ret;
 }
 
-pid_t strace(pid_t child, size_t option)
+int strace(pid_t child, size_t option)
 {
     struct user_regs_struct regs;
     unsigned short int check_syscall;
+    int status;
 
-    while (waitchild(child) < 1) {
+    waitpid(child, &status, 0);
+    while (get_status_signal(status)) {
         ptrace(PTRACE_GETREGS, child, NULL, &regs);
         check_syscall = ptrace(PTRACE_PEEKTEXT, child, regs.rip);
         ptrace(PTRACE_SINGLESTEP, child);
-        if (waitchild(child) < 1) {
+        waitpid(child, &status, 0);
+        if (get_status_signal(status)) {
             ptrace(PTRACE_GETREGS, child, NULL, &regs);
             if (check_syscall == 0x80)
                 print_syscall_ft(child, regs, option);
         }
     }
-    return child;
+    return status;
 }

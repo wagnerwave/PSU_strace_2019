@@ -21,15 +21,12 @@
 
 int print_error(char *str)
 {
-    perror(str);
+    fprintf(stderr, "%s", str);
     return 84;
 }
 
-int exit_strace(pid_t pid, size_t option)
+int exit_strace(int status, size_t option)
 {
-    int status;
-
-    waitpid(pid, &status, 0);
     if (WIFEXITED(status)) {
         if (option)
             printf("exit_group(0) = ?\n");
