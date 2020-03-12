@@ -60,7 +60,7 @@ static void print_argument_function(pid_t pid, s_syscall_t *temp, size_t option)
         arg = get_register_value(pid, i);
         type = temp->args[i].printer.type;
         print_argument(pid, arg, option, type);
-        if (i + 1 != temp->argc - 1)
+        if (i + 1 != temp->argc)
             printf(", ");
     }
 };
