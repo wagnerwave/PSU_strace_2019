@@ -18,8 +18,6 @@
 #include <string.h>
 #include "my.h"
 #include "strace.h"
-#include "../include/strace.h"
-#include "syscalls.c"
 
 static int waitchild(pid_t pid)
 {
@@ -36,7 +34,7 @@ static int waitchild(pid_t pid)
     }
 }
 
-int strace(pid_t child, size_t option)
+pid_t strace(pid_t child, size_t option)
 {
     struct user_regs_struct regs;
     unsigned short int check_syscall;
@@ -51,5 +49,5 @@ int strace(pid_t child, size_t option)
                 print_syscall_ft(child, regs, option);
         }
     }
-    return 0;
+    return child;
 }

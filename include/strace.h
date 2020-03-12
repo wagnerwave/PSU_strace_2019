@@ -20,8 +20,7 @@ typedef int (*t_printer)(unsigned long long int,
 			 const struct user_regs_struct *,
 			 const struct s_strace_opts *);
 
-enum e_type
-  {
+enum e_type {
     T_DEFAULT,
     T_INTEGER,
     T_POINTER,
@@ -30,26 +29,23 @@ enum e_type
     T_ULONG,
     T_SIZE_T,
     T_SSIZE_T,
-  };
-
-struct s_syscall_arg
-{
-  bool	custom;
-  union
-  {
-    enum e_type	type;
-    t_printer	callback;
-  }	printer;
 };
 
-typedef struct s_syscall
-{
-  unsigned long long	id;
-  const char		*name;
-  bool			noreturn;
-  enum e_type		retval;
-  size_t		argc;
-  struct s_syscall_arg	args[STRACE_SYSCALL_ARGS_MAX];
+struct s_syscall_arg {
+    bool custom;
+    union {
+        enum e_type	type;
+        t_printer	callback;
+    } printer;
+};
+
+typedef struct s_syscall {
+    unsigned long long id;
+    const char *name;
+    bool noreturn;
+    enum e_type retval;
+    size_t argc;
+    struct s_syscall_arg  args[STRACE_SYSCALL_ARGS_MAX];
 } s_syscall_t;
 
 extern struct s_syscall g_syscalls[];

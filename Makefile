@@ -10,9 +10,12 @@ D_INC		=	./include/
 
 NAME		=	strace
 
-SRC			=	$(D_SRC)print_ft.c \
-				$(D_SRC)main.c	\
+SRC			=	$(D_SRC)syscalls.c \
+				$(D_SRC)utils_ft.c \
+				$(D_SRC)func_option.c \
+				$(D_SRC)print_syscall.c \
 				$(D_SRC)trace.c	\
+				$(D_SRC)main.c
 
 OBJ		=	$(SRC:.c=.o)
 
