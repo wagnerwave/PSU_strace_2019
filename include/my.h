@@ -10,7 +10,7 @@
 
 #define MAX_LENGTH_ARG 32
 
-pid_t strace(pid_t child, size_t option);
+int strace(pid_t child, size_t option);
 int print_error(char *str);
 int exit_strace(int value_status, size_t option);
 int process_running(pid_t child);

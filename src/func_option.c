@@ -37,13 +37,13 @@ int load_child(int ac, char **av)
 
     memcpy(args, av, ac * sizeof(char *));
     args[ac] = NULL;
-    var_check = ptrace(PTRACE_TRACEME);
-    if (var_check == -1)
+    var_check = ptrace(PTRACE_TRACEME, 0, 0, 0);
+/*     if (var_check == -1)
         return print_error("Error: ptrace traceme failed.\n");
     var_check = kill(getpid(), SIGSTOP);
     if (var_check == -1)
-        return print_error("Error: kill pid with sigstop failed.\n");
-    var_check = execvp(args[2], args);
+        return print_error("Error: kill pid with sigstop failed.\n");  */
+    var_check = execvp(av[1], &av[1]);
     if (var_check == -1)
         return print_error("Error: excution error.\n");
     return 0;

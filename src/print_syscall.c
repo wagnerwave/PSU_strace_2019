@@ -82,11 +82,14 @@ static void print_return_value(unsigned long long ret_value, s_syscall_t *temp, 
 
 void print_syscall_ft(pid_t child, struct user_regs_struct regs, size_t option)
 {
-    int syscall_nb = regs.orig_rax;
+    int syscall_nb = regs.rax;
     int ret_value = regs.rax;
     s_syscall_t *temp = NULL;
 
     temp = get_syscall_by_value(syscall_nb);
+    if (temp == NULL) {
+        exit(84);
+    }
     printf("%s(", temp->name);
     print_argument_function(child, temp, option);
     printf(") = ");

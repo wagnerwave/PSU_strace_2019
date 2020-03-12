@@ -50,7 +50,7 @@ int main(int ac, char **av)
     pid_t child;
     pid_t pid_arg; // le pid donné en argument
     size_t option = 0;
-    int flag;
+    int flag = 0;
 
    /* flag = parsing(ac, av);
     if (flag == P_FLAG || flag == S_FLAG)
@@ -62,5 +62,6 @@ int main(int ac, char **av)
     child = fork();
     if (child == 0)
         return load_child(ac, av);
+    waitpid(child, &flag, 0);
     return exit_strace(strace(child, option), option);
 }

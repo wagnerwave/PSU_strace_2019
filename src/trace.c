@@ -28,21 +28,21 @@ static int get_status_signal(int status)
 
 int strace(pid_t child, size_t option)
 {
-    struct user_regs_struct regs;
-    unsigned short int check_syscall;
-    int status;
+    struct user_regs_struct regs = {0};
+    long check_syscall;
+    int status = 0;
 
+    if (ptrace(PTRACE_SINGLESTEP, child, 0, 0) == -1)
+        return 84;
     waitpid(child, &status, 0);
     while (get_status_signal(status)) {
         ptrace(PTRACE_GETREGS, child, NULL, &regs);
-        check_syscall = ptrace(PTRACE_PEEKTEXT, child, regs.rip);
-        ptrace(PTRACE_SINGLESTEP, child);
+        check_syscall = ptrace(PTRACE_PEEKTEXT, child, regs.rip, 0);
+        if ((check_syscall & 0xFFFF) == 0x050F)
+            print_syscall_ft(child, regs, option);
+        if (ptrace(PTRACE_SINGLESTEP, child, 0, 0) == -1)
+            return 84;
         waitpid(child, &status, 0);
-        if (get_status_signal(status)) {
-            ptrace(PTRACE_GETREGS, child, NULL, &regs);
-            if (check_syscall == 0x80)
-                print_syscall_ft(child, regs, option);
-        }
     }
     return status;
 }
