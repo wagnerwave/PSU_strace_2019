@@ -19,10 +19,6 @@
 #include "my.h"
 #include "strace.h"
 
-#define NO_FLAG 0
-#define P_FLAG 1
-#define S_FLAG -1
-
 static void error(int ac, char **av)
 {
     if (ac != 2 && ac != 3) {
@@ -34,34 +30,24 @@ static void error(int ac, char **av)
         exit(84);
     }
 }
-static int parsing(int ac, char **av)
-{
-    error(ac, av);
-    if (ac == 2)
-        return (NO_FLAG);
-    if (ac == 3 && strcmp(av[1], "-s") == 0)
-        return (S_FLAG);
-    if (ac == 3 && strcmp(av[1], "-p") == 0)
-        return (P_FLAG);
-}
 
 int main(int ac, char **av)
 {
     pid_t child;
-    pid_t pid_arg; // le pid donné en argument
     size_t option = 0;
     int flag = 0;
 
-   /* flag = parsing(ac, av);
-    if (flag == P_FLAG || flag == S_FLAG)
-        pid_arg = atoi(av[2]);
-    if (flag == NO_FLAG)
-        pid_arg = atoi(av[1]);
-    return (process_running(pid_arg));
-    */
+    error(ac, av);
+    if (ac == 3 && strcmp(av[1], "-p") == 0) {
+        child = atoi(av[2]);
+        return (process_running(child));
+    }
+    if (ac == 3 && strcmp(av[1], "-s") == 0) {
+        option = 1;
+    }
     child = fork();
     if (child == 0)
-        return load_child(ac, av);
+        return load_child(ac, av, option);
     waitpid(child, &flag, 0);
     return exit_strace(strace(child, option), option);
 }

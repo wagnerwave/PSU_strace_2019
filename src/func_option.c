@@ -26,25 +26,22 @@ int process_running(pid_t child)
 
     ret_value = ptrace(PTRACE_ATTACH, child);
     if (ret_value == -1)
-        return print_error("Error: attach to running processus failed.\n");
-    return (int)ret_value;
+        return 84;
+    return 0;
 }
 
-int load_child(int ac, char **av)
+int load_child(int ac, char **av, size_t option)
 {
     int var_check = 0;
-    char *args[ac + 1];
 
-    memcpy(args, av, ac * sizeof(char *));
-    args[ac] = NULL;
     var_check = ptrace(PTRACE_TRACEME, 0, 0, 0);
-/*     if (var_check == -1)
-        return print_error("Error: ptrace traceme failed.\n");
+    if (var_check == -1)
+        return 84;
     var_check = kill(getpid(), SIGSTOP);
     if (var_check == -1)
-        return print_error("Error: kill pid with sigstop failed.\n");  */
-    var_check = execvp(av[1], &av[1]);
+        return 84;
+    var_check = execvp(av[1 + option], &av[1 + option]);
     if (var_check == -1)
-        return print_error("Error: excution error.\n");
+        return 84;
     return 0;
 }

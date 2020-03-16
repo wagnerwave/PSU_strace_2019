@@ -65,7 +65,8 @@ static void print_argument_function(pid_t pid, s_syscall_t *temp, size_t option)
     }
 };
 
-static void print_return_value(unsigned long long ret_value, s_syscall_t *temp, size_t option)
+static void print_return_value(unsigned long long ret_value, s_syscall_t *temp,
+size_t option)
 {
     if (option) {
         if (temp->retval == T_INTEGER)

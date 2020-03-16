@@ -79,7 +79,7 @@ s_syscall_t	g_syscalls[] = {
             {
                 .custom = true,
                 .printer = {
-                  //  .callback = strace_print_flags_open
+                    .callback = 0
                 }
             },
             {
@@ -121,7 +121,7 @@ s_syscall_t	g_syscalls[] = {
             {
                 .custom = true,
                 .printer = {
-                  //  .callback = strace_print_stat_struct
+                    .callback = 0
                 }
             },
         }
@@ -142,7 +142,7 @@ s_syscall_t	g_syscalls[] = {
             {
                 .custom = true,
                 .printer = {
-                   // .callback = strace_print_stat_struct
+                    .callback = 0
                 }
             },
         }
@@ -163,7 +163,7 @@ s_syscall_t	g_syscalls[] = {
             {
                 .custom = true,
                 .printer = {
-                   // .callback = strace_print_stat_struct
+                    .callback = 0
                 }
             },
         }
@@ -250,7 +250,7 @@ s_syscall_t	g_syscalls[] = {
             {
                 .custom = true,
                 .printer = {
-                  //  .callback = strace_print_mmap_flags
+                    .callback = 0
                 }
             },
             {
